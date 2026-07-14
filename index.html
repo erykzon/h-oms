@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMS Review — Hisense MX</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f3;color:#1a1a1a;font-size:14px}
+:root{--teal:#1D9E75;--teal-light:#E1F5EE;--teal-dark:#0F6E56;--amber:#BA7517;--amber-light:#FAEEDA;--red:#E24B4A;--red-light:#FCEBEB;--gray:#888780;--gray-light:#F1EFE8;--blue:#378ADD;--blue-light:#E6F1FB;--border:#e0ddd6;--card:#fff;--text:#1a1a1a;--text2:#666;--radius:10px}
+
+header{background:#fff;border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:16px;height:52px;position:sticky;top:0;z-index:100}
+.logo{font-size:15px;font-weight:600;color:var(--teal-dark);letter-spacing:-0.3px}
+.logo span{color:var(--gray);font-weight:400}
+.upload-btn{margin-left:auto;display:flex;align-items:center;gap:6px;background:var(--teal);color:#fff;border:none;padding:6px 14px;border-radius:6px;font-size:13px;cursor:pointer;font-weight:500}
+.upload-btn:hover{background:var(--teal-dark)}
+#file-input{display:none}
+.file-info{font-size:12px;color:var(--text2);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.drop-zone{display:flex;flex-direction:column;align-items:center;justify-content:center;height:calc(100vh - 52px);gap:12px;color:var(--text2)}
+.drop-zone i{font-size:48px;color:var(--border)}
+.drop-zone h2{font-size:18px;color:var(--text);font-weight:500}
+.drop-zone p{font-size:13px}
+.drop-zone .btn{margin-top:8px;background:var(--teal);color:#fff;border:none;padding:10px 24px;border-radius:8px;font-size:14px;cursor:pointer;font-weight:500}
+.drop-zone .btn:hover{background:var(--teal-dark)}
+
+.app{display:none;flex-direction:column;height:calc(100vh - 52px)}
+.toolbar{background:#fff;border-bottom:1px solid var(--border);padding:8px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.filter-group{display:flex;align-items:center;gap:6px}
+.filter-group label{font-size:12px;color:var(--text2);white-space:nowrap}
+.filter-group input[type=date],.filter-group select{font-size:12px;border:1px solid var(--border);border-radius:6px;padding:4px 8px;background:#fff;color:var(--text);height:30px}
+.btn-apply{background:var(--teal);color:#fff;border:none;padding:5px 14px;border-radius:6px;font-size:12px;cursor:pointer;font-weight:500;height:30px}
+.btn-apply:hover{background:var(--teal-dark)}
+.summary-pills{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
+.pill{background:var(--gray-light);border-radius:20px;padding:3px 10px;font-size:12px;color:var(--text2)}
+.pill b{color:var(--text);font-weight:600}
+
+.tabs{display:flex;background:#fff;border-bottom:1px solid var(--border);padding:0 24px}
+.tab{padding:10px 18px;font-size:13px;font-weight:500;color:var(--text2);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap}
+.tab.active{color:var(--teal-dark);border-bottom-color:var(--teal)}
+.tab:hover:not(.active){color:var(--text)}
+
+.content{flex:1;overflow:auto;padding:20px 24px}
+
+.section{display:none}
+.section.active{display:block}
+
+.cards-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}
+.metric-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px}
+.metric-card .label{font-size:11px;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.3px}
+.metric-card .value{font-size:22px;font-weight:600;color:var(--text)}
+.metric-card .sub{font-size:11px;color:var(--text2);margin-top:2px}
+
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px}
+.chart-card h3{font-size:13px;font-weight:600;color:var(--text2);margin-bottom:14px;text-transform:uppercase;letter-spacing:0.3px}
+
+.cap-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-bottom:16px}
+.almacen-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px}
+.almacen-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.almacen-name{font-size:14px;font-weight:600;color:var(--text)}
+.almacen-code{font-size:11px;color:var(--text2);margin-top:1px}
+.almacen-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:12px}
+.badge-ok{background:#E1F5EE;color:#0F6E56}
+.badge-warn{background:#FAEEDA;color:#854F0B}
+.badge-over{background:#FCEBEB;color:#A32D2D}
+.badge-na{background:#F1EFE8;color:#5F5E5A}
+.almacen-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px}
+.stat-box{background:#f8f8f6;border-radius:6px;padding:6px 8px;text-align:center}
+.stat-box .sv{font-size:15px;font-weight:600;color:var(--text)}
+.stat-box .sl{font-size:10px;color:var(--text2);margin-top:1px}
+.cap-bar{height:8px;background:#eee;border-radius:4px;overflow:hidden;margin-top:6px}
+.cap-bar-fill{height:100%;border-radius:4px;transition:width 0.5s}
+.cap-levels{display:flex;justify-content:space-between;font-size:10px;color:var(--text2);margin-top:4px}
+
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{background:#f8f8f6;padding:8px 10px;text-align:left;font-weight:600;color:var(--text2);border-bottom:1px solid var(--border);position:sticky;top:0;white-space:nowrap;font-size:11px;text-transform:uppercase;letter-spacing:0.3px}
+tbody td{padding:7px 10px;border-bottom:1px solid #f0ede8;color:var(--text);white-space:nowrap}
+tbody tr:hover td{background:#fafaf8}
+tbody tr.group-row td{background:#f5f3ef;font-weight:600;color:var(--text)}
+tbody tr.total-row td{background:#edf7f2;font-weight:700;color:var(--teal-dark);border-top:1px solid var(--teal-light)}
+
+.empty{text-align:center;padding:40px;color:var(--text2)}
+.legend-row{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:10px;font-size:12px;color:var(--text2)}
+.legend-dot{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:middle}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">OMS Review <span>— Hisense MX</span></div>
+  <span class="file-info" id="file-name">Sin archivo cargado</span>
+  <button class="upload-btn" onclick="document.getElementById('file-input').click()">
+    <i class="ti ti-upload" aria-hidden="true"></i> Cargar OMS
+  </button>
+  <input type="file" id="file-input" accept=".xlsx,.xls" onchange="loadFile(event)">
+</header>
+
+<div class="drop-zone" id="drop-zone">
+  <i class="ti ti-table-import" aria-hidden="true"></i>
+  <h2>Carga el Plan de Carga OMS</h2>
+  <p>Selecciona el archivo Excel generado por planeación</p>
+  <button class="btn" onclick="document.getElementById('file-input').click()">
+    <i class="ti ti-upload"></i> Seleccionar archivo
+  </button>
+</div>
+
+<div class="app" id="app">
+  <div class="toolbar">
+    <div class="filter-group">
+      <label>Desde</label>
+      <input type="date" id="f-start">
+    </div>
+    <div class="filter-group">
+      <label>Hasta</label>
+      <input type="date" id="f-end">
+    </div>
+    <div class="filter-group">
+      <label>Almacén</label>
+      <select id="f-almacen"><option value="">Todos</option></select>
+    </div>
+    <div class="filter-group">
+      <label>Cliente</label>
+      <select id="f-cliente"><option value="">Todos</option></select>
+    </div>
+    <button class="btn-apply" onclick="applyFilters()">Aplicar</button>
+    <div class="summary-pills" id="summary-pills"></div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('capacity',this)"><i class="ti ti-building-warehouse" aria-hidden="true"></i> Capacity</div>
+    <div class="tab" onclick="showTab('review',this)"><i class="ti ti-table" aria-hidden="true"></i> Review</div>
+    <div class="tab" onclick="showTab('liver',this)"><i class="ti ti-clock" aria-hidden="true"></i> Liver</div>
+    <div class="tab" onclick="showTab('amazon',this)"><i class="ti ti-building-store" aria-hidden="true"></i> Amazon</div>
+  </div>
+
+  <div class="content">
+    <div class="section active" id="sec-capacity"></div>
+    <div class="section" id="sec-review"></div>
+    <div class="section" id="sec-liver"></div>
+    <div class="section" id="sec-amazon"></div>
+  </div>
+</div>
+
+<script>
+const ALMACENES = {
+  'Macro HE/AC 4': {code:'Nave 4', n1:4500, n2:5500, n3:7000},
+  'Macro HA 3':    {code:'Nave 3', n1:2500, n2:3000, n3:4000},
+  'Atizapark':     {code:'Atz',    n1:1500, n2:2000, n3:2500},
+  'Megapark':      {code:'MP',     n1:2000, n2:2500, n3:3000},
+  'Macro 5':       {code:'Nave 5', n1:700,  n2:1100, n3:1500},
+  'Fuera de sistema':{code:'FS',   n1:null, n2:null, n3:null},
+  'Tultipark II':  {code:'TP2',    n1:1500, n2:2000, n3:2500},
+  'Macro 1':       {code:'Nave 1', n1:1000, n2:1300, n3:2000},
+  'Directos':      {code:'DDI',    n1:null, n2:null, n3:null},
+  'Tijuana':       {code:'KN',     n1:1500, n2:2500, n3:3500}
+};
+
+let allData = [];
+let filtered = [];
+let capacityChart = null;
+
+function parseDate(v) {
+  if (!v) return null;
+  if (v instanceof Date) return v;
+  if (typeof v === 'number') {
+    const d = new Date(Math.round((v - 25569) * 86400 * 1000));
+    return d;
+  }
+  if (typeof v === 'string') return new Date(v);
+  return null;
+}
+
+function fmtDate(d) {
+  if (!d) return '';
+  return d.toLocaleDateString('es-MX', {day:'2-digit',month:'2-digit',year:'numeric'});
+}
+
+function fmtDateShort(d) {
+  if (!d) return '';
+  return d.toLocaleDateString('es-MX', {day:'2-digit',month:'2-digit'});
+}
+
+function fmtDateTime(d) {
+  if (!d) return '';
+  return d.toLocaleString('es-MX', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+}
+
+function toISO(d) {
+  if (!d) return '';
+  const dd = parseDate(d);
+  if (!dd) return '';
+  return dd.toISOString().split('T')[0];
+}
+
+function loadFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  document.getElementById('file-name').textContent = file.name;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const wb = XLSX.read(e.target.result, {type:'array', cellDates:true});
+    const sheetName = wb.SheetNames.find(n => n === 'Shipment Plan') || wb.SheetNames[0];
+    const ws = wb.Sheets[sheetName];
+    const rows = XLSX.utils.sheet_to_json(ws, {defval:''});
+    allData = rows;
+    initFilters();
+    applyFilters();
+    document.getElementById('drop-zone').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function initFilters() {
+  const almacenes = [...new Set(allData.map(r => r['Almacén de Carga']).filter(Boolean))].sort();
+  const clientes = [...new Set(allData.map(r => r['Determinante']).filter(Boolean))].sort();
+
+  const fAlm = document.getElementById('f-almacen');
+  fAlm.innerHTML = '<option value="">Todos</option>';
+  almacenes.forEach(a => { const o = document.createElement('option'); o.value = a; o.textContent = (ALMACENES[a]?.code || a); fAlm.appendChild(o); });
+
+  const fCli = document.getElementById('f-cliente');
+  fCli.innerHTML = '<option value="">Todos</option>';
+  clientes.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; fCli.appendChild(o); });
+
+  const dates = allData.map(r => parseDate(r['Dia de Carga'])).filter(Boolean).sort((a,b) => a-b);
+  if (dates.length) {
+    document.getElementById('f-start').value = toISO(dates[0]);
+    document.getElementById('f-end').value = toISO(dates[dates.length-1]);
+  }
+}
+
+function applyFilters() {
+  const start = document.getElementById('f-start').value;
+  const end = document.getElementById('f-end').value;
+  const alm = document.getElementById('f-almacen').value;
+  const cli = document.getElementById('f-cliente').value;
+
+  filtered = allData.filter(r => {
+    const d = parseDate(r['Dia de Carga']);
+    if (!d) return false;
+    const iso = toISO(d);
+    if (start && iso < start) return false;
+    if (end && iso > end) return false;
+    if (alm && r['Almacén de Carga'] !== alm) return false;
+    if (cli && r['Determinante'] !== cli) return false;
+    return true;
+  });
+
+  updateSummary();
+  const activeTab = document.querySelector('.tab.active');
+  const tabId = activeTab ? activeTab.getAttribute('onclick').match(/'([^']+)'/)[1] : 'capacity';
+  renderActive(tabId);
+}
+
+function updateSummary() {
+  const cns = new Set(filtered.map(r => r['CN'])).size;
+  const piezas = filtered.reduce((s,r) => s + (Number(r['Piezas'])||0), 0);
+  const pallets = filtered.reduce((s,r) => s + (Number(r['Pallets'])||0), 0);
+  document.getElementById('summary-pills').innerHTML = `
+    <span class="pill"><b>${cns.toLocaleString()}</b> CNs</span>
+    <span class="pill"><b>${piezas.toLocaleString()}</b> piezas</span>
+    <span class="pill"><b>${pallets.toLocaleString()}</b> pallets</span>
+    <span class="pill"><b>${filtered.length.toLocaleString()}</b> registros</span>
+  `;
+}
+
+function showTab(name, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('sec-'+name).classList.add('active');
+  renderActive(name);
+}
+
+function renderActive(name) {
+  if (name === 'capacity') renderCapacity();
+  else if (name === 'review') renderReview();
+  else if (name === 'liver') renderLiver();
+  else if (name === 'amazon') renderAmazon();
+}
+
+function renderCapacity() {
+  const el = document.getElementById('sec-capacity');
+
+  const byAlm = {};
+  filtered.forEach(r => {
+    const alm = r['Almacén de Carga'];
+    if (!alm) return;
+    if (!byAlm[alm]) byAlm[alm] = {cns: new Set(), piezas:0, pallets:0};
+    byAlm[alm].cns.add(r['CN']);
+    byAlm[alm].piezas += Number(r['Piezas'])||0;
+    byAlm[alm].pallets += Number(r['Pallets'])||0;
+  });
+
+  const totalPiezas = Object.values(byAlm).reduce((s,v) => s+v.piezas, 0);
+  const totalCNs = new Set(filtered.map(r=>r['CN'])).size;
+
+  let cards = '';
+  const order = Object.keys(ALMACENES);
+  const almList = [...new Set([...order.filter(a => byAlm[a]), ...Object.keys(byAlm).filter(a => !order.includes(a))])];
+
+  almList.forEach(alm => {
+    const info = ALMACENES[alm] || {code: alm, n1:null, n2:null, n3:null};
+    const data = byAlm[alm] || {cns: new Set(), piezas:0, pallets:0};
+    const p = data.piezas;
+    const hasLimits = info.n1 !== null;
+
+    let badge = '', badgeClass = '', barPct = 0, barColor = '#1D9E75';
+    if (!hasLimits) {
+      badge = 'Sin límite'; badgeClass = 'badge-na';
+    } else if (p <= info.n1) {
+      badge = 'OK'; badgeClass = 'badge-ok';
+      barPct = Math.round((p / info.n3) * 100);
+      barColor = '#1D9E75';
+    } else if (p <= info.n2) {
+      badge = 'Alerta N1'; badgeClass = 'badge-warn';
+      barPct = Math.round((p / info.n3) * 100);
+      barColor = '#EF9F27';
+    } else if (p <= info.n3) {
+      badge = 'Alerta N2'; badgeClass = 'badge-warn';
+      barPct = Math.round((p / info.n3) * 100);
+      barColor = '#D85A30';
+    } else {
+      badge = 'Excedido'; badgeClass = 'badge-over';
+      barPct = 100;
+      barColor = '#E24B4A';
+    }
+
+    cards += `
+    <div class="almacen-card">
+      <div class="almacen-header">
+        <div>
+          <div class="almacen-name">${info.code}</div>
+          <div class="almacen-code">${alm}</div>
+        </div>
+        <span class="almacen-badge ${badgeClass}">${badge}</span>
+      </div>
+      <div class="almacen-stats">
+        <div class="stat-box"><div class="sv">${data.cns.size}</div><div class="sl">CNs</div></div>
+        <div class="stat-box"><div class="sv">${p.toLocaleString()}</div><div class="sl">Piezas</div></div>
+        <div class="stat-box"><div class="sv">${data.pallets.toLocaleString()}</div><div class="sl">Pallets</div></div>
+      </div>
+      ${hasLimits ? `
+      <div class="cap-bar"><div class="cap-bar-fill" style="width:${Math.min(barPct,100)}%;background:${barColor}"></div></div>
+      <div class="cap-levels"><span>N1: ${info.n1?.toLocaleString()}</span><span>N2: ${info.n2?.toLocaleString()}</span><span>N3: ${info.n3?.toLocaleString()}</span></div>
+      ` : '<div style="font-size:11px;color:#888;margin-top:6px">Sin parámetros de capacidad</div>'}
+    </div>`;
+  });
+
+  const days = [...new Set(filtered.map(r => toISO(parseDate(r['Dia de Carga']))).filter(Boolean))].sort();
+  const dayLabels = days.map(d => {
+    const dt = new Date(d+'T00:00:00');
+    return dt.toLocaleDateString('es-MX',{weekday:'short',day:'2-digit',month:'2-digit'});
+  });
+
+  const almForChart = Object.keys(byAlm);
+  const colors = ['#1D9E75','#378ADD','#BA7517','#E24B4A','#9F4FBB','#D85A30','#185FA5','#639922','#3C3489','#0F6E56'];
+  const datasets = almForChart.map((alm, idx) => {
+    const info = ALMACENES[alm] || {code:alm};
+    const dayData = days.map(d => {
+      return filtered.filter(r => toISO(parseDate(r['Dia de Carga'])) === d && r['Almacén de Carga'] === alm)
+        .reduce((s,r) => s+(Number(r['Piezas'])||0), 0);
+    });
+    return {label: info.code || alm, data: dayData, backgroundColor: colors[idx % colors.length]+'cc', borderColor: colors[idx % colors.length], borderWidth:1};
+  });
+
+  el.innerHTML = `
+    <div class="cards-row">
+      <div class="metric-card"><div class="label">Total CNs</div><div class="value">${totalCNs.toLocaleString()}</div></div>
+      <div class="metric-card"><div class="label">Total piezas</div><div class="value">${totalPiezas.toLocaleString()}</div></div>
+      <div class="metric-card"><div class="label">Almacenes activos</div><div class="value">${almList.length}</div></div>
+      <div class="metric-card"><div class="label">Días en periodo</div><div class="value">${days.length}</div></div>
+    </div>
+    <div class="cap-grid">${cards || '<div class="empty">Sin datos</div>'}</div>
+    <div class="chart-card">
+      <h3>Piezas por almacén y día</h3>
+      <div class="legend-row" id="cap-legend"></div>
+      <div style="position:relative;width:100%;height:${Math.max(220, days.length * 40)}px">
+        <canvas id="cap-chart" role="img" aria-label="Gráfica de piezas por almacén y día de carga"></canvas>
+      </div>
+    </div>
+  `;
+
+  if (capacityChart) { capacityChart.destroy(); capacityChart = null; }
+  if (days.length && datasets.length) {
+    const legendEl = document.getElementById('cap-legend');
+    legendEl.innerHTML = datasets.map(ds => `<span><span class="legend-dot" style="background:${ds.borderColor}"></span>${ds.label}</span>`).join('');
+    capacityChart = new Chart(document.getElementById('cap-chart'), {
+      type: 'bar',
+      data: { labels: dayLabels, datasets },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { stacked: false, ticks: { font: { size: 11 }, autoSkip: false, maxRotation: 45 } },
+          y: { ticks: { font: { size: 11 } }, grid: { color: '#f0ede8' } }
+        }
+      }
+    });
+  }
+}
+
+function renderReview() {
+  const el = document.getElementById('sec-review');
+  const days = [...new Set(filtered.map(r => toISO(parseDate(r['Dia de Carga']))).filter(Boolean))].sort();
+
+  const byClienteDay = {};
+  filtered.forEach(r => {
+    const cli = r['Determinante'] || 'Sin determinante';
+    const day = toISO(parseDate(r['Dia de Carga']));
+    if (!day) return;
+    if (!byClienteDay[cli]) byClienteDay[cli] = {};
+    if (!byClienteDay[cli][day]) byClienteDay[cli][day] = {cns: new Set(), piezas:0, pallets:0};
+    byClienteDay[cli][day].cns.add(r['CN']);
+    byClienteDay[cli][day].piezas += Number(r['Piezas'])||0;
+    byClienteDay[cli][day].pallets += Number(r['Pallets'])||0;
+  });
+
+  const dayFmt = days.map(d => { const dt = new Date(d+'T00:00:00'); return dt.toLocaleDateString('es-MX',{weekday:'short',day:'2-digit',month:'2-digit'}); });
+
+  let thead = '<tr><th>Cliente / Determinante</th>';
+  days.forEach((d,i) => { thead += `<th colspan="3" style="text-align:center;background:#edf7f2;color:#0F6E56">${dayFmt[i]}</th>`; });
+  thead += '<th colspan="3" style="text-align:center;background:#f0edf7;color:#3C3489">Totales</th></tr>';
+  thead += '<tr><th></th>';
+  days.forEach(() => { thead += '<th>CNs</th><th>Piezas</th><th>Pallets</th>'; });
+  thead += '<th>CNs</th><th>Piezas</th><th>Pallets</th></tr>';
+
+  let tbody = '';
+  const clientes = Object.keys(byClienteDay).sort();
+  let totCNs = new Set(), totPiezas = 0, totPallets = 0;
+  const totByDay = {};
+
+  clientes.forEach(cli => {
+    let rowCNs = new Set(), rowP = 0, rowPal = 0;
+    let row = `<tr><td style="font-weight:500">${cli}</td>`;
+    days.forEach(d => {
+      const x = byClienteDay[cli][d];
+      if (x) {
+        row += `<td>${x.cns.size}</td><td>${x.piezas.toLocaleString()}</td><td>${x.pallets}</td>`;
+        x.cns.forEach(c => rowCNs.add(c));
+        rowP += x.piezas; rowPal += x.pallets;
+        if (!totByDay[d]) totByDay[d] = {cns: new Set(), piezas:0, pallets:0};
+        x.cns.forEach(c => totByDay[d].cns.add(c));
+        totByDay[d].piezas += x.piezas; totByDay[d].pallets += x.pallets;
+      } else { row += '<td style="color:#ccc">—</td><td style="color:#ccc">—</td><td style="color:#ccc">—</td>'; }
+    });
+    rowCNs.forEach(c => totCNs.add(c)); totPiezas += rowP; totPallets += rowPal;
+    row += `<td style="font-weight:600">${rowCNs.size}</td><td style="font-weight:600">${rowP.toLocaleString()}</td><td style="font-weight:600">${rowPal}</td></tr>`;
+    tbody += row;
+  });
+
+  let totRow = '<tr class="total-row"><td>Total general</td>';
+  days.forEach(d => {
+    const t = totByDay[d] || {cns:new Set(),piezas:0,pallets:0};
+    totRow += `<td>${t.cns.size}</td><td>${t.piezas.toLocaleString()}</td><td>${t.pallets}</td>`;
+  });
+  totRow += `<td>${totCNs.size}</td><td>${totPiezas.toLocaleString()}</td><td>${totPallets}</td></tr>`;
+
+  el.innerHTML = `
+    <div class="cards-row">
+      <div class="metric-card"><div class="label">Clientes</div><div class="value">${clientes.length}</div></div>
+      <div class="metric-card"><div class="label">CNs únicos</div><div class="value">${totCNs.size.toLocaleString()}</div></div>
+      <div class="metric-card"><div class="label">Piezas</div><div class="value">${totPiezas.toLocaleString()}</div></div>
+      <div class="metric-card"><div class="label">Pallets</div><div class="value">${totPallets.toLocaleString()}</div></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>${thead}</thead>
+        <tbody>${tbody}${totRow}</tbody>
+      </table>
+    </div>`;
+}
+
+function renderLiver() {
+  const el = document.getElementById('sec-liver');
+
+  const byDay = {};
+  filtered.forEach(r => {
+    const day = toISO(parseDate(r['Dia de Carga']));
+    if (!day) return;
+    if (!byDay[day]) byDay[day] = [];
+    byDay[day].push(r);
+  });
+
+  const days = Object.keys(byDay).sort();
+  let tbody = '';
+  let totP = 0;
+
+  days.forEach(d => {
+    const rows = byDay[d];
+    const dt = new Date(d+'T00:00:00');
+    const dayLabel = dt.toLocaleDateString('es-MX',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'});
+    const dayPiezas = rows.reduce((s,r) => s+(Number(r['Piezas'])||0), 0);
+    totP += dayPiezas;
+    const dayCNs = new Set(rows.map(r=>r['CN'])).size;
+
+    tbody += `<tr class="group-row">
+      <td colspan="7" style="padding:10px 10px 6px">${dayLabel} — ${dayCNs} CNs · ${dayPiezas.toLocaleString()} piezas</td>
+    </tr>`;
+
+    rows.forEach(r => {
+      const carga = parseDate(r['Hora de Carga'] ? new Date(toISO(parseDate(r['Dia de Carga']))+'T'+(typeof r['Hora de Carga']==='string'?r['Hora de Carga']:'00:00')) : null);
+      tbody += `<tr>
+        <td>${r['CN']||'—'}</td>
+        <td>${r['Almacén de Carga']?(ALMACENES[r['Almacén de Carga']]?.code||r['Almacén de Carga']):'—'}</td>
+        <td>${r['Determinante']||'—'}</td>
+        <td>${r['Modelo']||'—'}</td>
+        <td style="text-align:right;font-weight:500">${(Number(r['Piezas'])||0).toLocaleString()}</td>
+        <td>${r['Max de Salida']?fmtDateTime(parseDate(r['Max de Salida'])):'—'}</td>
+        <td>${r['Fecha Y Hora de Cita']?fmtDateTime(parseDate(r['Fecha Y Hora de Cita'])):'—'}</td>
+      </tr>`;
+    });
+  });
+
+  el.innerHTML = `
+    <div class="cards-row">
+      <div class="metric-card"><div class="label">Días con carga</div><div class="value">${days.length}</div></div>
+      <div class="metric-card"><div class="label">Total CNs</div><div class="value">${new Set(filtered.map(r=>r['CN'])).size.toLocaleString()}</div></div>
+      <div class="metric-card"><div class="label">Total piezas</div><div class="value">${totP.toLocaleString()}</div></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>CN</th><th>Almacén</th><th>Cliente</th><th>Modelo</th>
+            <th style="text-align:right">Piezas</th><th>Máx. salida</th><th>Cita</th>
+          </tr>
+        </thead>
+        <tbody>${tbody||'<tr><td colspan="7" class="empty">Sin datos en el filtro seleccionado</td></tr>'}</tbody>
+      </table>
+    </div>`;
+}
+
+function renderAmazon() {
+  const el = document.getElementById('sec-amazon');
+  const amz = filtered.filter(r => {
+    const det = (r['Determinante']||'').toUpperCase();
+    const cli = (r['Cliente']||'').toUpperCase();
+    return det.includes('AMAZON') || cli.includes('AMAZON');
+  });
+
+  if (!amz.length) {
+    el.innerHTML = '<div class="empty"><i class="ti ti-building-store" style="font-size:32px;display:block;margin-bottom:8px;color:#ccc"></i>Sin registros de Amazon en el periodo seleccionado</div>';
+    return;
+  }
+
+  const byDay = {};
+  amz.forEach(r => {
+    const day = toISO(parseDate(r['Dia de Carga']));
+    if (!day) return;
+    if (!byDay[day]) byDay[day] = {};
+    const alm = r['Almacén de Carga']||'Sin almacén';
+    if (!byDay[day][alm]) byDay[day][alm] = [];
+    byDay[day][alm].push(r);
+  });
+
+  let tbody = '';
+  Object.keys(byDay).sort().forEach(d => {
+    const dt = new Date(d+'T00:00:00');
+    const dayLabel = dt.toLocaleDateString('es-MX',{weekday:'short',day:'2-digit',month:'2-digit'});
+    Object.keys(byDay[d]).sort().forEach(alm => {
+      const rows = byDay[d][alm];
+      const almCode = ALMACENES[alm]?.code || alm;
+      const almCNs = new Set(rows.map(r=>r['CN'])).size;
+      const almP = rows.reduce((s,r)=>s+(Number(r['Piezas'])||0),0);
+      tbody += `<tr class="group-row"><td>${dayLabel}</td><td>${almCode}</td><td colspan="4" style="color:#666;font-weight:400">${almCNs} CNs · ${almP.toLocaleString()} piezas</td></tr>`;
+      rows.forEach(r => {
+        tbody += `<tr>
+          <td style="color:#ccc">↳</td>
+          <td style="color:#666;font-size:11px">${alm}</td>
+          <td>${r['CN']||'—'}</td>
+          <td>${r['Modelo']||'—'}</td>
+          <td style="text-align:right;font-weight:500">${(Number(r['Piezas'])||0).toLocaleString()}</td>
+          <td>${r['Fecha Y Hora de Cita']?fmtDateTime(parseDate(r['Fecha Y Hora de Cita'])):'—'}</td>
+        </tr>`;
+      });
+    });
+  });
+
+  const totCNs = new Set(amz.map(r=>r['CN'])).size;
+  const totP = amz.reduce((s,r)=>s+(Number(r['Piezas'])||0),0);
+
+  el.innerHTML = `
+    <div class="cards-row">
+      <div class="metric-card"><div class="label">CNs Amazon</div><div class="value">${totCNs}</div></div>
+      <div class="metric-card"><div class="label">Piezas</div><div class="value">${totP.toLocaleString()}</div></div>
+      <div class="metric-card"><div class="label">Almacenes</div><div class="value">${new Set(amz.map(r=>r['Almacén de Carga'])).size}</div></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Día</th><th>Almacén</th><th>CN</th><th>Modelo</th><th style="text-align:right">Piezas</th><th>Cita</th></tr></thead>
+        <tbody>${tbody}</tbody>
+      </table>
+    </div>`;
+}
+</script>
+</body>
+</html>

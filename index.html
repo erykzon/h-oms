@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OMS Review — Hisense MX</title>
+<title>OMS Review — H MX</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
@@ -15,17 +15,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 header{background:#fff;border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:16px;height:52px;position:sticky;top:0;z-index:100}
 .logo{font-size:15px;font-weight:600;color:var(--teal-dark);letter-spacing:-0.3px}
 .logo span{color:var(--gray);font-weight:400}
-.upload-btn{margin-left:auto;display:flex;align-items:center;gap:6px;background:var(--teal);color:#fff;border:none;padding:6px 14px;border-radius:6px;font-size:13px;cursor:pointer;font-weight:500}
+.header-actions{margin-left:auto;display:flex;align-items:center;gap:10px}
+.upload-btn{display:flex;align-items:center;gap:6px;background:var(--teal);color:#fff;border:none;padding:6px 14px;border-radius:6px;font-size:13px;cursor:pointer;font-weight:500}
 .upload-btn:hover{background:var(--teal-dark)}
-#file-input{display:none}
-.file-info{font-size:12px;color:var(--text2);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.upload-btn-sec{display:flex;align-items:center;gap:6px;background:#fff;color:var(--teal-dark);border:1px solid var(--teal);padding:6px 14px;border-radius:6px;font-size:13px;cursor:pointer;font-weight:500}
+.upload-btn-sec:hover{background:var(--teal-light)}
+.file-info{font-size:11px;color:var(--text2);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#file-input,#file-input-estatus{display:none}
 
 .drop-zone{display:flex;flex-direction:column;align-items:center;justify-content:center;height:calc(100vh - 52px);gap:12px;color:var(--text2)}
 .drop-zone i{font-size:48px;color:var(--border)}
 .drop-zone h2{font-size:18px;color:var(--text);font-weight:500}
 .drop-zone p{font-size:13px}
-.drop-zone .btn{margin-top:8px;background:var(--teal);color:#fff;border:none;padding:10px 24px;border-radius:8px;font-size:14px;cursor:pointer;font-weight:500}
+.drop-btns{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap;justify-content:center}
+.drop-zone .btn{background:var(--teal);color:#fff;border:none;padding:10px 24px;border-radius:8px;font-size:14px;cursor:pointer;font-weight:500}
 .drop-zone .btn:hover{background:var(--teal-dark)}
+.drop-zone .btn-sec{background:#fff;color:var(--teal-dark);border:1px solid var(--teal);padding:10px 24px;border-radius:8px;font-size:14px;cursor:pointer;font-weight:500}
+.drop-zone .btn-sec:hover{background:var(--teal-light)}
 
 .app{display:none;flex-direction:column;height:calc(100vh - 52px)}
 .toolbar{background:#fff;border-bottom:1px solid var(--border);padding:8px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
@@ -38,13 +44,13 @@ header{background:#fff;border-bottom:1px solid var(--border);padding:0 24px;disp
 .pill{background:var(--gray-light);border-radius:20px;padding:3px 10px;font-size:12px;color:var(--text2)}
 .pill b{color:var(--text);font-weight:600}
 
-.tabs{display:flex;background:#fff;border-bottom:1px solid var(--border);padding:0 24px}
-.tab{padding:10px 18px;font-size:13px;font-weight:500;color:var(--text2);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap}
+.tabs{display:flex;background:#fff;border-bottom:1px solid var(--border);padding:0 24px;overflow-x:auto}
+.tab{padding:10px 18px;font-size:13px;font-weight:500;color:var(--text2);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px}
 .tab.active{color:var(--teal-dark);border-bottom-color:var(--teal)}
 .tab:hover:not(.active){color:var(--text)}
+.tab-divider{width:1px;background:var(--border);margin:8px 4px}
 
 .content{flex:1;overflow:auto;padding:20px 24px}
-
 .section{display:none}
 .section.active{display:block}
 
@@ -57,7 +63,7 @@ header{background:#fff;border-bottom:1px solid var(--border);padding:0 24px;disp
 .chart-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px}
 .chart-card h3{font-size:13px;font-weight:600;color:var(--text2);margin-bottom:14px;text-transform:uppercase;letter-spacing:0.3px}
 
-.cap-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-bottom:16px}
+.cap-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px}
 .almacen-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px}
 .almacen-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
 .almacen-name{font-size:14px;font-weight:600;color:var(--text)}
@@ -72,8 +78,19 @@ header{background:#fff;border-bottom:1px solid var(--border);padding:0 24px;disp
 .stat-box .sv{font-size:15px;font-weight:600;color:var(--text)}
 .stat-box .sl{font-size:10px;color:var(--text2);margin-top:1px}
 .cap-bar{height:8px;background:#eee;border-radius:4px;overflow:hidden;margin-top:6px}
-.cap-bar-fill{height:100%;border-radius:4px;transition:width 0.5s}
+.cap-bar-fill{height:100%;border-radius:4px}
 .cap-levels{display:flex;justify-content:space-between;font-size:10px;color:var(--text2);margin-top:4px}
+
+.estatus-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-bottom:16px}
+.est-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px}
+.est-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.est-name{font-size:14px;font-weight:600;color:var(--text)}
+.est-sub{font-size:11px;color:var(--text2);margin-top:1px}
+.est-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px}
+.est-bar-wrap{margin-top:6px}
+.est-bar{height:8px;background:#eee;border-radius:4px;overflow:hidden;position:relative}
+.est-bar-emb{height:100%;border-radius:4px;background:#1D9E75}
+.est-bar-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--text2);margin-top:3px}
 
 .table-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:auto}
 table{width:100%;border-collapse:collapse;font-size:12px}
@@ -86,30 +103,47 @@ tbody tr.total-row td{background:#edf7f2;font-weight:700;color:var(--teal-dark);
 .empty{text-align:center;padding:40px;color:var(--text2)}
 .legend-row{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:10px;font-size:12px;color:var(--text2)}
 .legend-dot{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:middle}
+
+.no-estatus{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:12px;color:var(--text2);text-align:center}
+.no-estatus i{font-size:40px;color:var(--border)}
+.no-estatus h3{font-size:15px;color:var(--text);font-weight:500}
+.no-estatus p{font-size:13px;max-width:300px}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">OMS Review <span>— Hisense MX</span></div>
-  <span class="file-info" id="file-name">Sin archivo cargado</span>
-  <button class="upload-btn" onclick="document.getElementById('file-input').click()">
-    <i class="ti ti-upload" aria-hidden="true"></i> Cargar OMS
-  </button>
-  <input type="file" id="file-input" accept=".xlsx,.xls" onchange="loadFile(event)">
+  <div class="logo">OMS Review <span>— H MX</span></div>
+  <div class="header-actions">
+    <span class="file-info" id="file-name-oms">Sin OMS</span>
+    <button class="upload-btn-sec" onclick="document.getElementById('file-input').click()">
+      <i class="ti ti-upload" aria-hidden="true"></i> OMS
+    </button>
+    <span class="file-info" id="file-name-estatus">Sin Estatus</span>
+    <button class="upload-btn" onclick="document.getElementById('file-input-estatus').click()">
+      <i class="ti ti-upload" aria-hidden="true"></i> Estatus
+    </button>
+  </div>
+  <input type="file" id="file-input" accept=".xlsx,.xls" onchange="loadFileOMS(event)">
+  <input type="file" id="file-input-estatus" accept=".xlsx,.xlsm,.xls" onchange="loadFileEstatus(event)">
 </header>
 
 <div class="drop-zone" id="drop-zone">
   <i class="ti ti-table-import" aria-hidden="true"></i>
-  <h2>Carga el Plan de Carga OMS</h2>
-  <p>Selecciona el archivo Excel generado por planeación</p>
-  <button class="btn" onclick="document.getElementById('file-input').click()">
-    <i class="ti ti-upload"></i> Seleccionar archivo
-  </button>
+  <h2>Carga un archivo para comenzar</h2>
+  <p>Plan de Carga OMS o archivo de Estatus</p>
+  <div class="drop-btns">
+    <button class="btn-sec" onclick="document.getElementById('file-input').click()">
+      <i class="ti ti-upload"></i> Cargar OMS
+    </button>
+    <button class="btn" onclick="document.getElementById('file-input-estatus').click()">
+      <i class="ti ti-upload"></i> Cargar Estatus
+    </button>
+  </div>
 </div>
 
 <div class="app" id="app">
-  <div class="toolbar">
+  <div class="toolbar" id="toolbar-oms">
     <div class="filter-group">
       <label>Desde</label>
       <input type="date" id="f-start">
@@ -130,11 +164,30 @@ tbody tr.total-row td{background:#edf7f2;font-weight:700;color:var(--teal-dark);
     <div class="summary-pills" id="summary-pills"></div>
   </div>
 
+  <div class="toolbar" id="toolbar-estatus" style="display:none">
+    <div class="filter-group">
+      <label>Fecha de carga</label>
+      <input type="date" id="es-start">
+    </div>
+    <div class="filter-group">
+      <label>Hasta</label>
+      <input type="date" id="es-end">
+    </div>
+    <div class="filter-group">
+      <label>Almacén</label>
+      <select id="es-almacen"><option value="">Todos</option></select>
+    </div>
+    <button class="btn-apply" onclick="applyEstatusFilters()">Aplicar</button>
+    <div class="summary-pills" id="estatus-pills"></div>
+  </div>
+
   <div class="tabs">
     <div class="tab active" onclick="showTab('capacity',this)"><i class="ti ti-building-warehouse" aria-hidden="true"></i> Capacity</div>
     <div class="tab" onclick="showTab('review',this)"><i class="ti ti-table" aria-hidden="true"></i> Review</div>
     <div class="tab" onclick="showTab('liver',this)"><i class="ti ti-clock" aria-hidden="true"></i> Liver</div>
     <div class="tab" onclick="showTab('amazon',this)"><i class="ti ti-building-store" aria-hidden="true"></i> Amazon</div>
+    <div class="tab-divider"></div>
+    <div class="tab" onclick="showTab('estatus',this)"><i class="ti ti-chart-bar" aria-hidden="true"></i> Estatus</div>
   </div>
 
   <div class="content">
@@ -142,126 +195,173 @@ tbody tr.total-row td{background:#edf7f2;font-weight:700;color:var(--teal-dark);
     <div class="section" id="sec-review"></div>
     <div class="section" id="sec-liver"></div>
     <div class="section" id="sec-amazon"></div>
+    <div class="section" id="sec-estatus"></div>
   </div>
 </div>
 
 <script>
 const ALMACENES = {
-  'Macro HE/AC 4': {code:'Nave 4', n1:4500, n2:5500, n3:7000},
-  'Macro HA 3':    {code:'Nave 3', n1:2500, n2:3000, n3:4000},
-  'Atizapark':     {code:'Atz',    n1:1500, n2:2000, n3:2500},
-  'Megapark':      {code:'MP',     n1:2000, n2:2500, n3:3000},
-  'Macro 5':       {code:'Nave 5', n1:700,  n2:1100, n3:1500},
-  'Fuera de sistema':{code:'FS',   n1:null, n2:null, n3:null},
-  'Tultipark II':  {code:'TP2',    n1:1500, n2:2000, n3:2500},
-  'Macro 1':       {code:'Nave 1', n1:1000, n2:1300, n3:2000},
-  'Directos':      {code:'DDI',    n1:null, n2:null, n3:null},
-  'Tijuana':       {code:'KN',     n1:1500, n2:2500, n3:3500}
+  'Macro HE/AC 4':{code:'Nave 4',n1:4500,n2:5500,n3:7000},
+  'Macro HA 3':{code:'Nave 3',n1:2500,n2:3000,n3:4000},
+  'Atizapark':{code:'Atz',n1:1500,n2:2000,n3:2500},
+  'Megapark':{code:'MP',n1:2000,n2:2500,n3:3000},
+  'Macro 5':{code:'Nave 5',n1:700,n2:1100,n3:1500},
+  'Fuera de sistema':{code:'FS',n1:null,n2:null,n3:null},
+  'Tultipark II':{code:'TP2',n1:1500,n2:2000,n3:2500},
+  'Macro 1':{code:'Nave 1',n1:1000,n2:1300,n3:2000},
+  'Directos':{code:'DDI',n1:null,n2:null,n3:null},
+  'Tijuana':{code:'KN',n1:1500,n2:2500,n3:3500}
 };
 
-let allData = [];
-let filtered = [];
-let capacityChart = null;
+let allData=[], filtered=[], capacityChart=null;
+let estatusData=[], estatusFiltered=[];
+let appVisible=false;
 
-function parseDate(v) {
-  if (!v) return null;
-  if (v instanceof Date) return v;
-  if (typeof v === 'number') {
-    const d = new Date(Math.round((v - 25569) * 86400 * 1000));
-    return d;
-  }
-  if (typeof v === 'string') return new Date(v);
+function parseDate(v){
+  if(!v)return null;
+  if(v instanceof Date)return v;
+  if(typeof v==='number'){return new Date(Math.round((v-25569)*86400*1000));}
+  if(typeof v==='string')return new Date(v);
   return null;
 }
-
-function fmtDate(d) {
-  if (!d) return '';
-  return d.toLocaleDateString('es-MX', {day:'2-digit',month:'2-digit',year:'numeric'});
-}
-
-function fmtDateShort(d) {
-  if (!d) return '';
-  return d.toLocaleDateString('es-MX', {day:'2-digit',month:'2-digit'});
-}
-
-function fmtDateTime(d) {
-  if (!d) return '';
-  return d.toLocaleString('es-MX', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
-}
-
-function toISO(d) {
-  if (!d) return '';
-  const dd = parseDate(d);
-  if (!dd) return '';
+function toISO(d){
+  if(!d)return '';
+  const dd=parseDate(d);
+  if(!dd)return '';
   return dd.toISOString().split('T')[0];
 }
+function fmtDateTime(d){
+  if(!d)return '';
+  return d.toLocaleString('es-MX',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+}
 
-function loadFile(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  document.getElementById('file-name').textContent = file.name;
-  const reader = new FileReader();
-  reader.onload = e => {
-    const wb = XLSX.read(e.target.result, {type:'array', cellDates:true});
-    const sheetName = wb.SheetNames.find(n => n === 'Shipment Plan') || wb.SheetNames[0];
-    const ws = wb.Sheets[sheetName];
-    const rows = XLSX.utils.sheet_to_json(ws, {defval:''});
-    allData = rows;
+function showApp(){
+  if(!appVisible){
+    document.getElementById('drop-zone').style.display='none';
+    document.getElementById('app').style.display='flex';
+    appVisible=true;
+  }
+}
+
+function loadFileOMS(event){
+  const file=event.target.files[0];
+  if(!file)return;
+  document.getElementById('file-name-oms').textContent=file.name;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const wb=XLSX.read(e.target.result,{type:'array',cellDates:true});
+    const sn=wb.SheetNames.find(n=>n==='Shipment Plan')||wb.SheetNames[0];
+    const ws=wb.Sheets[sn];
+    allData=XLSX.utils.sheet_to_json(ws,{defval:''});
     initFilters();
     applyFilters();
-    document.getElementById('drop-zone').style.display = 'none';
-    document.getElementById('app').style.display = 'flex';
+    showApp();
   };
   reader.readAsArrayBuffer(file);
 }
 
-function initFilters() {
-  const almacenes = [...new Set(allData.map(r => r['Almacén de Carga']).filter(Boolean))].sort();
-  const clientes = [...new Set(allData.map(r => r['Determinante']).filter(Boolean))].sort();
+function loadFileEstatus(event){
+  const file=event.target.files[0];
+  if(!file)return;
+  document.getElementById('file-name-estatus').textContent=file.name;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const wb=XLSX.read(e.target.result,{type:'array',cellDates:true});
+    const sn=wb.SheetNames.find(n=>n==='Estatus')||wb.SheetNames[0];
+    const ws=wb.Sheets[sn];
+    // Headers in row 2
+    const raw=XLSX.utils.sheet_to_json(ws,{defval:'',header:1});
+    if(raw.length<2){return;}
+    const headers=raw[1];
+    estatusData=raw.slice(2).map(row=>{
+      const obj={};
+      headers.forEach((h,i)=>{if(h)obj[h]=row[i]||'';});
+      return obj;
+    }).filter(r=>r['Fecha']||r['CN']);
+    initEstatusFilters();
+    applyEstatusFilters();
+    showApp();
+  };
+  reader.readAsArrayBuffer(file);
+}
 
-  const fAlm = document.getElementById('f-almacen');
-  fAlm.innerHTML = '<option value="">Todos</option>';
-  almacenes.forEach(a => { const o = document.createElement('option'); o.value = a; o.textContent = (ALMACENES[a]?.code || a); fAlm.appendChild(o); });
-
-  const fCli = document.getElementById('f-cliente');
-  fCli.innerHTML = '<option value="">Todos</option>';
-  clientes.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; fCli.appendChild(o); });
-
-  const dates = allData.map(r => parseDate(r['Dia de Carga'])).filter(Boolean).sort((a,b) => a-b);
-  if (dates.length) {
-    document.getElementById('f-start').value = toISO(dates[0]);
-    document.getElementById('f-end').value = toISO(dates[dates.length-1]);
+function initFilters(){
+  const almacenes=[...new Set(allData.map(r=>r['Almacén de Carga']).filter(Boolean))].sort();
+  const clientes=[...new Set(allData.map(r=>r['Determinante']).filter(Boolean))].sort();
+  const fAlm=document.getElementById('f-almacen');
+  fAlm.innerHTML='<option value="">Todos</option>';
+  almacenes.forEach(a=>{const o=document.createElement('option');o.value=a;o.textContent=(ALMACENES[a]?.code||a);fAlm.appendChild(o);});
+  const fCli=document.getElementById('f-cliente');
+  fCli.innerHTML='<option value="">Todos</option>';
+  clientes.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;fCli.appendChild(o);});
+  const dates=allData.map(r=>parseDate(r['Dia de Carga'])).filter(Boolean).sort((a,b)=>a-b);
+  if(dates.length){
+    document.getElementById('f-start').value=toISO(dates[0]);
+    document.getElementById('f-end').value=toISO(dates[dates.length-1]);
   }
 }
 
-function applyFilters() {
-  const start = document.getElementById('f-start').value;
-  const end = document.getElementById('f-end').value;
-  const alm = document.getElementById('f-almacen').value;
-  const cli = document.getElementById('f-cliente').value;
-
-  filtered = allData.filter(r => {
-    const d = parseDate(r['Dia de Carga']);
-    if (!d) return false;
-    const iso = toISO(d);
-    if (start && iso < start) return false;
-    if (end && iso > end) return false;
-    if (alm && r['Almacén de Carga'] !== alm) return false;
-    if (cli && r['Determinante'] !== cli) return false;
-    return true;
-  });
-
-  updateSummary();
-  const activeTab = document.querySelector('.tab.active');
-  const tabId = activeTab ? activeTab.getAttribute('onclick').match(/'([^']+)'/)[1] : 'capacity';
-  renderActive(tabId);
+function initEstatusFilters(){
+  const almacenes=[...new Set(estatusData.map(r=>r['Almacén de carga']).filter(Boolean))].sort();
+  const fAlm=document.getElementById('es-almacen');
+  fAlm.innerHTML='<option value="">Todos</option>';
+  almacenes.forEach(a=>{const o=document.createElement('option');o.value=a;o.textContent=(ALMACENES[a]?.code||a);fAlm.appendChild(o);});
+  const dates=estatusData.map(r=>parseDate(r['Fecha'])).filter(Boolean).sort((a,b)=>a-b);
+  if(dates.length){
+    document.getElementById('es-start').value=toISO(dates[0]);
+    document.getElementById('es-end').value=toISO(dates[dates.length-1]);
+  }
 }
 
-function updateSummary() {
-  const cns = new Set(filtered.map(r => r['CN'])).size;
-  const piezas = filtered.reduce((s,r) => s + (Number(r['Piezas'])||0), 0);
-  const pallets = filtered.reduce((s,r) => s + (Number(r['Pallets'])||0), 0);
-  document.getElementById('summary-pills').innerHTML = `
+function applyFilters(){
+  const start=document.getElementById('f-start').value;
+  const end=document.getElementById('f-end').value;
+  const alm=document.getElementById('f-almacen').value;
+  const cli=document.getElementById('f-cliente').value;
+  filtered=allData.filter(r=>{
+    const d=parseDate(r['Dia de Carga']);
+    if(!d)return false;
+    const iso=toISO(d);
+    if(start&&iso<start)return false;
+    if(end&&iso>end)return false;
+    if(alm&&r['Almacén de Carga']!==alm)return false;
+    if(cli&&r['Determinante']!==cli)return false;
+    return true;
+  });
+  updateSummary();
+  const activeTab=document.querySelector('.tab.active');
+  const tabId=activeTab?activeTab.getAttribute('onclick').match(/'([^']+)'/)[1]:'capacity';
+  if(tabId!=='estatus')renderActive(tabId);
+}
+
+function applyEstatusFilters(){
+  const start=document.getElementById('es-start').value;
+  const end=document.getElementById('es-end').value;
+  const alm=document.getElementById('es-almacen').value;
+  estatusFiltered=estatusData.filter(r=>{
+    const d=parseDate(r['Fecha']);
+    if(!d)return false;
+    const iso=toISO(d);
+    if(start&&iso<start)return false;
+    if(end&&iso>end)return false;
+    if(alm&&r['Almacén de carga']!==alm)return false;
+    return true;
+  });
+  const cns=new Set(estatusFiltered.map(r=>r['CN'])).size;
+  const piezas=estatusFiltered.reduce((s,r)=>s+(Number(r['Piezas'])||0),0);
+  document.getElementById('estatus-pills').innerHTML=`
+    <span class="pill"><b>${cns.toLocaleString()}</b> CNs</span>
+    <span class="pill"><b>${piezas.toLocaleString()}</b> piezas</span>
+    <span class="pill"><b>${estatusFiltered.length.toLocaleString()}</b> registros</span>
+  `;
+  renderEstatus();
+}
+
+function updateSummary(){
+  const cns=new Set(filtered.map(r=>r['CN'])).size;
+  const piezas=filtered.reduce((s,r)=>s+(Number(r['Piezas'])||0),0);
+  const pallets=filtered.reduce((s,r)=>s+(Number(r['Pallets'])||0),0);
+  document.getElementById('summary-pills').innerHTML=`
     <span class="pill"><b>${cns.toLocaleString()}</b> CNs</span>
     <span class="pill"><b>${piezas.toLocaleString()}</b> piezas</span>
     <span class="pill"><b>${pallets.toLocaleString()}</b> pallets</span>
@@ -269,243 +369,313 @@ function updateSummary() {
   `;
 }
 
-function showTab(name, el) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+function showTab(name,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   el.classList.add('active');
   document.getElementById('sec-'+name).classList.add('active');
+  // Toggle toolbars
+  if(name==='estatus'){
+    document.getElementById('toolbar-oms').style.display='none';
+    document.getElementById('toolbar-estatus').style.display='flex';
+  } else {
+    document.getElementById('toolbar-oms').style.display='flex';
+    document.getElementById('toolbar-estatus').style.display='none';
+  }
   renderActive(name);
 }
 
-function renderActive(name) {
-  if (name === 'capacity') renderCapacity();
-  else if (name === 'review') renderReview();
-  else if (name === 'liver') renderLiver();
-  else if (name === 'amazon') renderAmazon();
+function renderActive(name){
+  if(name==='capacity')renderCapacity();
+  else if(name==='review')renderReview();
+  else if(name==='liver')renderLiver();
+  else if(name==='amazon')renderAmazon();
+  else if(name==='estatus')renderEstatus();
 }
 
-function renderCapacity() {
-  const el = document.getElementById('sec-capacity');
+function renderEstatus(){
+  const el=document.getElementById('sec-estatus');
+  if(!estatusData.length){
+    el.innerHTML=`<div class="no-estatus">
+      <i class="ti ti-chart-bar" aria-hidden="true"></i>
+      <h3>Carga el archivo Estatus</h3>
+      <p>Usa el botón "Estatus" en la barra superior para cargar tu archivo Estatus-2026</p>
+      <button class="btn-apply" style="margin-top:8px;height:36px;padding:0 20px" onclick="document.getElementById('file-input-estatus').click()">
+        <i class="ti ti-upload"></i> Cargar Estatus
+      </button>
+    </div>`;
+    return;
+  }
 
-  const byAlm = {};
-  filtered.forEach(r => {
-    const alm = r['Almacén de Carga'];
-    if (!alm) return;
-    if (!byAlm[alm]) byAlm[alm] = {cns: new Set(), piezas:0, pallets:0};
+  const data=estatusFiltered.length?estatusFiltered:estatusData;
+
+  // Aggregate by almacen
+  const byAlm={};
+  data.forEach(r=>{
+    const alm=r['Almacén de carga']||'Sin almacén';
+    const eu=r['Estatus Unidades']||'';
+    const ep=r['Estatus del pedido']||'';
+    if(!byAlm[alm])byAlm[alm]={cns:new Set(),piezas:0,embarcado:0,porArribar:0,arribado:0,rampa:0};
     byAlm[alm].cns.add(r['CN']);
-    byAlm[alm].piezas += Number(r['Piezas'])||0;
-    byAlm[alm].pallets += Number(r['Pallets'])||0;
+    byAlm[alm].piezas+=Number(r['Piezas'])||0;
+    if(eu==='EMBARCADO')byAlm[alm].embarcado++;
+    if(eu==='POR ARRIBAR')byAlm[alm].porArribar++;
+    if(eu==='ARRIBADO')byAlm[alm].arribado++;
+    if(eu==='RAMPA')byAlm[alm].rampa++;
   });
 
-  const totalPiezas = Object.values(byAlm).reduce((s,v) => s+v.piezas, 0);
-  const totalCNs = new Set(filtered.map(r=>r['CN'])).size;
+  // Aggregate for pivot table: Estatus CN vs Estatus Unidades
+  const estatusCN=[...new Set(data.map(r=>r['Estatus del pedido']).filter(Boolean))].sort();
+  const estatusUN=[...new Set(data.map(r=>r['Estatus Unidades']).filter(Boolean))].sort();
+  const pivot={};
+  data.forEach(r=>{
+    const ep=r['Estatus del pedido']||'';
+    const eu=r['Estatus Unidades']||'';
+    if(!pivot[ep])pivot[ep]={};
+    pivot[ep][eu]=(pivot[ep][eu]||0)+1;
+  });
 
-  let cards = '';
-  const order = Object.keys(ALMACENES);
-  const almList = [...new Set([...order.filter(a => byAlm[a]), ...Object.keys(byAlm).filter(a => !order.includes(a))])];
+  // Cards
+  const totalCNs=new Set(data.map(r=>r['CN'])).size;
+  const totalPiezas=data.reduce((s,r)=>s+(Number(r['Piezas'])||0),0);
+  const totalEmb=data.filter(r=>r['Estatus Unidades']==='EMBARCADO').length;
+  const totalArr=data.filter(r=>r['Estatus Unidades']==='POR ARRIBAR').length;
+  const pctEmb=totalCNs?Math.round((totalEmb/data.length)*100):0;
 
-  almList.forEach(alm => {
-    const info = ALMACENES[alm] || {code: alm, n1:null, n2:null, n3:null};
-    const data = byAlm[alm] || {cns: new Set(), piezas:0, pallets:0};
-    const p = data.piezas;
-    const hasLimits = info.n1 !== null;
+  let almCards='';
+  Object.entries(byAlm).sort((a,b)=>b[1].piezas-a[1].piezas).forEach(([alm,d])=>{
+    const info=ALMACENES[alm]||{code:alm};
+    const total=d.cns.size;
+    const pctOk=total?Math.round((d.embarcado/data.filter(r=>r['Almacén de carga']===alm).length)*100):0;
+    let badge,badgeClass;
+    if(d.porArribar===0){badge='Sin pendientes';badgeClass='badge-ok';}
+    else if(pctOk>=80){badge=`${d.porArribar} por arribar`;badgeClass='badge-warn';}
+    else{badge=`${d.porArribar} por arribar`;badgeClass='badge-over';}
 
-    let badge = '', badgeClass = '', barPct = 0, barColor = '#1D9E75';
-    if (!hasLimits) {
-      badge = 'Sin límite'; badgeClass = 'badge-na';
-    } else if (p <= info.n1) {
-      badge = 'OK'; badgeClass = 'badge-ok';
-      barPct = Math.round((p / info.n3) * 100);
-      barColor = '#1D9E75';
-    } else if (p <= info.n2) {
-      badge = 'Alerta N1'; badgeClass = 'badge-warn';
-      barPct = Math.round((p / info.n3) * 100);
-      barColor = '#EF9F27';
-    } else if (p <= info.n3) {
-      badge = 'Alerta N2'; badgeClass = 'badge-warn';
-      barPct = Math.round((p / info.n3) * 100);
-      barColor = '#D85A30';
-    } else {
-      badge = 'Excedido'; badgeClass = 'badge-over';
-      barPct = 100;
-      barColor = '#E24B4A';
-    }
-
-    cards += `
-    <div class="almacen-card">
-      <div class="almacen-header">
+    almCards+=`<div class="est-card">
+      <div class="est-header">
         <div>
-          <div class="almacen-name">${info.code}</div>
-          <div class="almacen-code">${alm}</div>
+          <div class="est-name">${info.code}</div>
+          <div class="est-sub">${alm}</div>
         </div>
         <span class="almacen-badge ${badgeClass}">${badge}</span>
       </div>
+      <div class="est-stats">
+        <div class="stat-box"><div class="sv">${total}</div><div class="sl">CNs</div></div>
+        <div class="stat-box"><div class="sv" style="color:#1D9E75">${d.embarcado}</div><div class="sl">Embarcado</div></div>
+        <div class="stat-box"><div class="sv" style="color:${d.porArribar>0?'#E24B4A':'#888'}">${d.porArribar}</div><div class="sl">Por arribar</div></div>
+      </div>
+      <div class="est-bar-wrap">
+        <div class="est-bar"><div class="est-bar-emb" style="width:${pctOk}%"></div></div>
+        <div class="est-bar-labels"><span>${pctOk}% embarcado</span><span>${d.piezas.toLocaleString()} pzs</span></div>
+      </div>
+    </div>`;
+  });
+
+  // Pivot table
+  let thead=`<tr><th>Estatus CN</th>`;
+  estatusUN.forEach(eu=>{thead+=`<th style="text-align:right">${eu}</th>`;});
+  thead+=`<th style="text-align:right;background:#edf7f2;color:#0F6E56">Total</th><th style="text-align:right">%</th></tr>`;
+
+  let tbody='';
+  const grandTotal=data.length;
+  estatusCN.forEach(ep=>{
+    const row=pivot[ep]||{};
+    const rowTotal=Object.values(row).reduce((s,v)=>s+v,0);
+    const pct=grandTotal?Math.round((rowTotal/grandTotal)*100):0;
+    tbody+=`<tr><td>${ep}</td>`;
+    estatusUN.forEach(eu=>{tbody+=`<td style="text-align:right">${row[eu]||'—'}</td>`;});
+    tbody+=`<td style="text-align:right;font-weight:600">${rowTotal}</td><td style="text-align:right;color:var(--text2)">${pct}%</td></tr>`;
+  });
+
+  // Total row
+  tbody+='<tr class="total-row"><td>Total general</td>';
+  let grandColTotals={};
+  estatusUN.forEach(eu=>{
+    const t=data.filter(r=>r['Estatus Unidades']===eu).length;
+    grandColTotals[eu]=t;
+    tbody+=`<td style="text-align:right">${t}</td>`;
+  });
+  tbody+=`<td style="text-align:right">${grandTotal}</td><td style="text-align:right">100%</td></tr>`;
+
+  // Pct row
+  tbody+='<tr><td style="color:var(--text2);font-size:11px">%</td>';
+  estatusUN.forEach(eu=>{
+    const pct=grandTotal?Math.round((grandColTotals[eu]/grandTotal)*100):0;
+    tbody+=`<td style="text-align:right;color:var(--text2);font-size:11px">${pct}%</td>`;
+  });
+  tbody+='<td></td><td></td></tr>';
+
+  el.innerHTML=`
+    <div class="cards-row">
+      <div class="metric-card"><div class="label">Total CNs</div><div class="value">${totalCNs.toLocaleString()}</div></div>
+      <div class="metric-card"><div class="label">Total piezas</div><div class="value">${totalPiezas.toLocaleString()}</div></div>
+      <div class="metric-card"><div class="label">Embarcado</div><div class="value" style="color:#1D9E75">${totalEmb.toLocaleString()}</div><div class="sub">${pctEmb}% del total</div></div>
+      <div class="metric-card"><div class="label">Por arribar</div><div class="value" style="color:${totalArr>0?'#E24B4A':'#888'}">${totalArr.toLocaleString()}</div></div>
+    </div>
+    <div class="estatus-grid">${almCards||'<div class="empty">Sin datos</div>'}</div>
+    <div class="chart-card">
+      <h3>Estatus CN vs estatus unidades</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>${thead}</thead>
+          <tbody>${tbody}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function renderCapacity(){
+  const el=document.getElementById('sec-capacity');
+  const byAlm={};
+  filtered.forEach(r=>{
+    const alm=r['Almacén de Carga'];
+    if(!alm)return;
+    if(!byAlm[alm])byAlm[alm]={cns:new Set(),piezas:0,pallets:0};
+    byAlm[alm].cns.add(r['CN']);
+    byAlm[alm].piezas+=Number(r['Piezas'])||0;
+    byAlm[alm].pallets+=Number(r['Pallets'])||0;
+  });
+  const totalPiezas=Object.values(byAlm).reduce((s,v)=>s+v.piezas,0);
+  const totalCNs=new Set(filtered.map(r=>r['CN'])).size;
+  let cards='';
+  const order=Object.keys(ALMACENES);
+  const almList=[...new Set([...order.filter(a=>byAlm[a]),...Object.keys(byAlm).filter(a=>!order.includes(a))])];
+  almList.forEach(alm=>{
+    const info=ALMACENES[alm]||{code:alm,n1:null,n2:null,n3:null};
+    const data=byAlm[alm]||{cns:new Set(),piezas:0,pallets:0};
+    const p=data.piezas;
+    const hasLimits=info.n1!==null;
+    let badge='',badgeClass='',barPct=0,barColor='#1D9E75';
+    if(!hasLimits){badge='Sin límite';badgeClass='badge-na';}
+    else if(p<=info.n1){badge='OK';badgeClass='badge-ok';barPct=Math.round((p/info.n3)*100);barColor='#1D9E75';}
+    else if(p<=info.n2){badge='Alerta N1';badgeClass='badge-warn';barPct=Math.round((p/info.n3)*100);barColor='#EF9F27';}
+    else if(p<=info.n3){badge='Alerta N2';badgeClass='badge-warn';barPct=Math.round((p/info.n3)*100);barColor='#D85A30';}
+    else{badge='Excedido';badgeClass='badge-over';barPct=100;barColor='#E24B4A';}
+    cards+=`<div class="almacen-card">
+      <div class="almacen-header"><div><div class="almacen-name">${info.code}</div><div class="almacen-code">${alm}</div></div>
+      <span class="almacen-badge ${badgeClass}">${badge}</span></div>
       <div class="almacen-stats">
         <div class="stat-box"><div class="sv">${data.cns.size}</div><div class="sl">CNs</div></div>
         <div class="stat-box"><div class="sv">${p.toLocaleString()}</div><div class="sl">Piezas</div></div>
         <div class="stat-box"><div class="sv">${data.pallets.toLocaleString()}</div><div class="sl">Pallets</div></div>
       </div>
-      ${hasLimits ? `
-      <div class="cap-bar"><div class="cap-bar-fill" style="width:${Math.min(barPct,100)}%;background:${barColor}"></div></div>
-      <div class="cap-levels"><span>N1: ${info.n1?.toLocaleString()}</span><span>N2: ${info.n2?.toLocaleString()}</span><span>N3: ${info.n3?.toLocaleString()}</span></div>
-      ` : '<div style="font-size:11px;color:#888;margin-top:6px">Sin parámetros de capacidad</div>'}
+      ${hasLimits?`<div class="cap-bar"><div class="cap-bar-fill" style="width:${Math.min(barPct,100)}%;background:${barColor}"></div></div>
+      <div class="cap-levels"><span>N1: ${info.n1?.toLocaleString()}</span><span>N2: ${info.n2?.toLocaleString()}</span><span>N3: ${info.n3?.toLocaleString()}</span></div>`
+      :'<div style="font-size:11px;color:#888;margin-top:6px">Sin parámetros de capacidad</div>'}
     </div>`;
   });
-
-  const days = [...new Set(filtered.map(r => toISO(parseDate(r['Dia de Carga']))).filter(Boolean))].sort();
-  const dayLabels = days.map(d => {
-    const dt = new Date(d+'T00:00:00');
-    return dt.toLocaleDateString('es-MX',{weekday:'short',day:'2-digit',month:'2-digit'});
+  const days=[...new Set(filtered.map(r=>toISO(parseDate(r['Dia de Carga']))).filter(Boolean))].sort();
+  const dayLabels=days.map(d=>{const dt=new Date(d+'T00:00:00');return dt.toLocaleDateString('es-MX',{weekday:'short',day:'2-digit',month:'2-digit'});});
+  const almForChart=Object.keys(byAlm);
+  const colors=['#1D9E75','#378ADD','#BA7517','#E24B4A','#9F4FBB','#D85A30','#185FA5','#639922','#3C3489','#0F6E56'];
+  const datasets=almForChart.map((alm,idx)=>{
+    const info=ALMACENES[alm]||{code:alm};
+    const dayData=days.map(d=>filtered.filter(r=>toISO(parseDate(r['Dia de Carga']))===d&&r['Almacén de Carga']===alm).reduce((s,r)=>s+(Number(r['Piezas'])||0),0));
+    return{label:info.code||alm,data:dayData,backgroundColor:colors[idx%colors.length]+'cc',borderColor:colors[idx%colors.length],borderWidth:1};
   });
-
-  const almForChart = Object.keys(byAlm);
-  const colors = ['#1D9E75','#378ADD','#BA7517','#E24B4A','#9F4FBB','#D85A30','#185FA5','#639922','#3C3489','#0F6E56'];
-  const datasets = almForChart.map((alm, idx) => {
-    const info = ALMACENES[alm] || {code:alm};
-    const dayData = days.map(d => {
-      return filtered.filter(r => toISO(parseDate(r['Dia de Carga'])) === d && r['Almacén de Carga'] === alm)
-        .reduce((s,r) => s+(Number(r['Piezas'])||0), 0);
-    });
-    return {label: info.code || alm, data: dayData, backgroundColor: colors[idx % colors.length]+'cc', borderColor: colors[idx % colors.length], borderWidth:1};
-  });
-
-  el.innerHTML = `
+  el.innerHTML=`
     <div class="cards-row">
       <div class="metric-card"><div class="label">Total CNs</div><div class="value">${totalCNs.toLocaleString()}</div></div>
       <div class="metric-card"><div class="label">Total piezas</div><div class="value">${totalPiezas.toLocaleString()}</div></div>
       <div class="metric-card"><div class="label">Almacenes activos</div><div class="value">${almList.length}</div></div>
       <div class="metric-card"><div class="label">Días en periodo</div><div class="value">${days.length}</div></div>
     </div>
-    <div class="cap-grid">${cards || '<div class="empty">Sin datos</div>'}</div>
+    <div class="cap-grid">${cards||'<div class="empty">Sin datos</div>'}</div>
     <div class="chart-card">
       <h3>Piezas por almacén y día</h3>
       <div class="legend-row" id="cap-legend"></div>
-      <div style="position:relative;width:100%;height:${Math.max(220, days.length * 40)}px">
-        <canvas id="cap-chart" role="img" aria-label="Gráfica de piezas por almacén y día de carga"></canvas>
+      <div style="position:relative;width:100%;height:${Math.max(220,days.length*40)}px">
+        <canvas id="cap-chart" role="img" aria-label="Gráfica de piezas por almacén y día"></canvas>
       </div>
-    </div>
-  `;
-
-  if (capacityChart) { capacityChart.destroy(); capacityChart = null; }
-  if (days.length && datasets.length) {
-    const legendEl = document.getElementById('cap-legend');
-    legendEl.innerHTML = datasets.map(ds => `<span><span class="legend-dot" style="background:${ds.borderColor}"></span>${ds.label}</span>`).join('');
-    capacityChart = new Chart(document.getElementById('cap-chart'), {
-      type: 'bar',
-      data: { labels: dayLabels, datasets },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { stacked: false, ticks: { font: { size: 11 }, autoSkip: false, maxRotation: 45 } },
-          y: { ticks: { font: { size: 11 } }, grid: { color: '#f0ede8' } }
-        }
-      }
+    </div>`;
+  if(capacityChart){capacityChart.destroy();capacityChart=null;}
+  if(days.length&&datasets.length){
+    document.getElementById('cap-legend').innerHTML=datasets.map(ds=>`<span><span class="legend-dot" style="background:${ds.borderColor}"></span>${ds.label}</span>`).join('');
+    capacityChart=new Chart(document.getElementById('cap-chart'),{
+      type:'bar',data:{labels:dayLabels,datasets},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+        scales:{x:{ticks:{font:{size:11},autoSkip:false,maxRotation:45}},y:{ticks:{font:{size:11}},grid:{color:'#f0ede8'}}}}
     });
   }
 }
 
-function renderReview() {
-  const el = document.getElementById('sec-review');
-  const days = [...new Set(filtered.map(r => toISO(parseDate(r['Dia de Carga']))).filter(Boolean))].sort();
-
-  const byClienteDay = {};
-  filtered.forEach(r => {
-    const cli = r['Determinante'] || 'Sin determinante';
-    const day = toISO(parseDate(r['Dia de Carga']));
-    if (!day) return;
-    if (!byClienteDay[cli]) byClienteDay[cli] = {};
-    if (!byClienteDay[cli][day]) byClienteDay[cli][day] = {cns: new Set(), piezas:0, pallets:0};
+function renderReview(){
+  const el=document.getElementById('sec-review');
+  const days=[...new Set(filtered.map(r=>toISO(parseDate(r['Dia de Carga']))).filter(Boolean))].sort();
+  const byClienteDay={};
+  filtered.forEach(r=>{
+    const cli=r['Determinante']||'Sin determinante';
+    const day=toISO(parseDate(r['Dia de Carga']));
+    if(!day)return;
+    if(!byClienteDay[cli])byClienteDay[cli]={};
+    if(!byClienteDay[cli][day])byClienteDay[cli][day]={cns:new Set(),piezas:0,pallets:0};
     byClienteDay[cli][day].cns.add(r['CN']);
-    byClienteDay[cli][day].piezas += Number(r['Piezas'])||0;
-    byClienteDay[cli][day].pallets += Number(r['Pallets'])||0;
+    byClienteDay[cli][day].piezas+=Number(r['Piezas'])||0;
+    byClienteDay[cli][day].pallets+=Number(r['Pallets'])||0;
   });
-
-  const dayFmt = days.map(d => { const dt = new Date(d+'T00:00:00'); return dt.toLocaleDateString('es-MX',{weekday:'short',day:'2-digit',month:'2-digit'}); });
-
-  let thead = '<tr><th>Cliente / Determinante</th>';
-  days.forEach((d,i) => { thead += `<th colspan="3" style="text-align:center;background:#edf7f2;color:#0F6E56">${dayFmt[i]}</th>`; });
-  thead += '<th colspan="3" style="text-align:center;background:#f0edf7;color:#3C3489">Totales</th></tr>';
-  thead += '<tr><th></th>';
-  days.forEach(() => { thead += '<th>CNs</th><th>Piezas</th><th>Pallets</th>'; });
-  thead += '<th>CNs</th><th>Piezas</th><th>Pallets</th></tr>';
-
-  let tbody = '';
-  const clientes = Object.keys(byClienteDay).sort();
-  let totCNs = new Set(), totPiezas = 0, totPallets = 0;
-  const totByDay = {};
-
-  clientes.forEach(cli => {
-    let rowCNs = new Set(), rowP = 0, rowPal = 0;
-    let row = `<tr><td style="font-weight:500">${cli}</td>`;
-    days.forEach(d => {
-      const x = byClienteDay[cli][d];
-      if (x) {
-        row += `<td>${x.cns.size}</td><td>${x.piezas.toLocaleString()}</td><td>${x.pallets}</td>`;
-        x.cns.forEach(c => rowCNs.add(c));
-        rowP += x.piezas; rowPal += x.pallets;
-        if (!totByDay[d]) totByDay[d] = {cns: new Set(), piezas:0, pallets:0};
-        x.cns.forEach(c => totByDay[d].cns.add(c));
-        totByDay[d].piezas += x.piezas; totByDay[d].pallets += x.pallets;
-      } else { row += '<td style="color:#ccc">—</td><td style="color:#ccc">—</td><td style="color:#ccc">—</td>'; }
+  const dayFmt=days.map(d=>{const dt=new Date(d+'T00:00:00');return dt.toLocaleDateString('es-MX',{weekday:'short',day:'2-digit',month:'2-digit'});});
+  let thead='<tr><th>Cliente</th>';
+  days.forEach((d,i)=>{thead+=`<th colspan="3" style="text-align:center;background:#edf7f2;color:#0F6E56">${dayFmt[i]}</th>`;});
+  thead+='<th colspan="3" style="text-align:center;background:#f0edf7;color:#3C3489">Totales</th></tr>';
+  thead+='<tr><th></th>';
+  days.forEach(()=>{thead+='<th>CNs</th><th>Piezas</th><th>Pallets</th>';});
+  thead+='<th>CNs</th><th>Piezas</th><th>Pallets</th></tr>';
+  let tbody='';
+  const clientes=Object.keys(byClienteDay).sort();
+  let totCNs=new Set(),totPiezas=0,totPallets=0;
+  const totByDay={};
+  clientes.forEach(cli=>{
+    let rowCNs=new Set(),rowP=0,rowPal=0;
+    let row=`<tr><td style="font-weight:500">${cli}</td>`;
+    days.forEach(d=>{
+      const x=byClienteDay[cli][d];
+      if(x){
+        row+=`<td>${x.cns.size}</td><td>${x.piezas.toLocaleString()}</td><td>${x.pallets}</td>`;
+        x.cns.forEach(c=>rowCNs.add(c));rowP+=x.piezas;rowPal+=x.pallets;
+        if(!totByDay[d])totByDay[d]={cns:new Set(),piezas:0,pallets:0};
+        x.cns.forEach(c=>totByDay[d].cns.add(c));totByDay[d].piezas+=x.piezas;totByDay[d].pallets+=x.pallets;
+      }else{row+='<td style="color:#ccc">—</td><td style="color:#ccc">—</td><td style="color:#ccc">—</td>';}
     });
-    rowCNs.forEach(c => totCNs.add(c)); totPiezas += rowP; totPallets += rowPal;
-    row += `<td style="font-weight:600">${rowCNs.size}</td><td style="font-weight:600">${rowP.toLocaleString()}</td><td style="font-weight:600">${rowPal}</td></tr>`;
-    tbody += row;
+    rowCNs.forEach(c=>totCNs.add(c));totPiezas+=rowP;totPallets+=rowPal;
+    row+=`<td style="font-weight:600">${rowCNs.size}</td><td style="font-weight:600">${rowP.toLocaleString()}</td><td style="font-weight:600">${rowPal}</td></tr>`;
+    tbody+=row;
   });
-
-  let totRow = '<tr class="total-row"><td>Total general</td>';
-  days.forEach(d => {
-    const t = totByDay[d] || {cns:new Set(),piezas:0,pallets:0};
-    totRow += `<td>${t.cns.size}</td><td>${t.piezas.toLocaleString()}</td><td>${t.pallets}</td>`;
-  });
-  totRow += `<td>${totCNs.size}</td><td>${totPiezas.toLocaleString()}</td><td>${totPallets}</td></tr>`;
-
-  el.innerHTML = `
+  let totRow='<tr class="total-row"><td>Total general</td>';
+  days.forEach(d=>{const t=totByDay[d]||{cns:new Set(),piezas:0,pallets:0};totRow+=`<td>${t.cns.size}</td><td>${t.piezas.toLocaleString()}</td><td>${t.pallets}</td>`;});
+  totRow+=`<td>${totCNs.size}</td><td>${totPiezas.toLocaleString()}</td><td>${totPallets}</td></tr>`;
+  el.innerHTML=`
     <div class="cards-row">
       <div class="metric-card"><div class="label">Clientes</div><div class="value">${clientes.length}</div></div>
       <div class="metric-card"><div class="label">CNs únicos</div><div class="value">${totCNs.size.toLocaleString()}</div></div>
       <div class="metric-card"><div class="label">Piezas</div><div class="value">${totPiezas.toLocaleString()}</div></div>
       <div class="metric-card"><div class="label">Pallets</div><div class="value">${totPallets.toLocaleString()}</div></div>
     </div>
-    <div class="table-wrap">
-      <table>
-        <thead>${thead}</thead>
-        <tbody>${tbody}${totRow}</tbody>
-      </table>
-    </div>`;
+    <div class="table-wrap"><table><thead>${thead}</thead><tbody>${tbody}${totRow}</tbody></table></div>`;
 }
 
-function renderLiver() {
-  const el = document.getElementById('sec-liver');
-
-  const byDay = {};
-  filtered.forEach(r => {
-    const day = toISO(parseDate(r['Dia de Carga']));
-    if (!day) return;
-    if (!byDay[day]) byDay[day] = [];
+function renderLiver(){
+  const el=document.getElementById('sec-liver');
+  const byDay={};
+  filtered.forEach(r=>{
+    const day=toISO(parseDate(r['Dia de Carga']));
+    if(!day)return;
+    if(!byDay[day])byDay[day]=[];
     byDay[day].push(r);
   });
-
-  const days = Object.keys(byDay).sort();
-  let tbody = '';
-  let totP = 0;
-
-  days.forEach(d => {
-    const rows = byDay[d];
-    const dt = new Date(d+'T00:00:00');
-    const dayLabel = dt.toLocaleDateString('es-MX',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'});
-    const dayPiezas = rows.reduce((s,r) => s+(Number(r['Piezas'])||0), 0);
-    totP += dayPiezas;
-    const dayCNs = new Set(rows.map(r=>r['CN'])).size;
-
-    tbody += `<tr class="group-row">
-      <td colspan="7" style="padding:10px 10px 6px">${dayLabel} — ${dayCNs} CNs · ${dayPiezas.toLocaleString()} piezas</td>
-    </tr>`;
-
-    rows.forEach(r => {
-      const carga = parseDate(r['Hora de Carga'] ? new Date(toISO(parseDate(r['Dia de Carga']))+'T'+(typeof r['Hora de Carga']==='string'?r['Hora de Carga']:'00:00')) : null);
-      tbody += `<tr>
+  const days=Object.keys(byDay).sort();
+  let tbody='',totP=0;
+  days.forEach(d=>{
+    const rows=byDay[d];
+    const dt=new Date(d+'T00:00:00');
+    const dayLabel=dt.toLocaleDateString('es-MX',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'});
+    const dayPiezas=rows.reduce((s,r)=>s+(Number(r['Piezas'])||0),0);
+    totP+=dayPiezas;
+    const dayCNs=new Set(rows.map(r=>r['CN'])).size;
+    tbody+=`<tr class="group-row"><td colspan="7" style="padding:10px 10px 6px">${dayLabel} — ${dayCNs} CNs · ${dayPiezas.toLocaleString()} piezas</td></tr>`;
+    rows.forEach(r=>{
+      tbody+=`<tr>
         <td>${r['CN']||'—'}</td>
         <td>${r['Almacén de Carga']?(ALMACENES[r['Almacén de Carga']]?.code||r['Almacén de Carga']):'—'}</td>
         <td>${r['Determinante']||'—'}</td>
@@ -516,87 +686,60 @@ function renderLiver() {
       </tr>`;
     });
   });
-
-  el.innerHTML = `
+  el.innerHTML=`
     <div class="cards-row">
-      <div class="metric-card"><div class="label">Días con carga</div><div class="value">${days.length}</div></div>
-      <div class="metric-card"><div class="label">Total CNs</div><div class="value">${new Set(filtered.map(r=>r['CN'])).size.toLocaleString()}</div></div>
-      <div class="metric-card"><div class="label">Total piezas</div><div class="value">${totP.toLocaleString()}</div></div>
+      <div class="metric-card"><div class="label">Días</div><div class="value">${days.length}</div></div>
+      <div class="metric-card"><div class="label">CNs</div><div class="value">${new Set(filtered.map(r=>r['CN'])).size.toLocaleString()}</div></div>
+      <div class="metric-card"><div class="label">Piezas</div><div class="value">${totP.toLocaleString()}</div></div>
     </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>CN</th><th>Almacén</th><th>Cliente</th><th>Modelo</th>
-            <th style="text-align:right">Piezas</th><th>Máx. salida</th><th>Cita</th>
-          </tr>
-        </thead>
-        <tbody>${tbody||'<tr><td colspan="7" class="empty">Sin datos en el filtro seleccionado</td></tr>'}</tbody>
-      </table>
-    </div>`;
+    <div class="table-wrap"><table>
+      <thead><tr><th>CN</th><th>Almacén</th><th>Cliente</th><th>Modelo</th><th style="text-align:right">Piezas</th><th>Máx. salida</th><th>Cita</th></tr></thead>
+      <tbody>${tbody||'<tr><td colspan="7" class="empty">Sin datos</td></tr>'}</tbody>
+    </table></div>`;
 }
 
-function renderAmazon() {
-  const el = document.getElementById('sec-amazon');
-  const amz = filtered.filter(r => {
-    const det = (r['Determinante']||'').toUpperCase();
-    const cli = (r['Cliente']||'').toUpperCase();
-    return det.includes('AMAZON') || cli.includes('AMAZON');
+function renderAmazon(){
+  const el=document.getElementById('sec-amazon');
+  const amz=filtered.filter(r=>{
+    const det=(r['Determinante']||'').toUpperCase();
+    const cli=(r['Cliente']||'').toUpperCase();
+    return det.includes('AMAZON')||cli.includes('AMAZON');
   });
-
-  if (!amz.length) {
-    el.innerHTML = '<div class="empty"><i class="ti ti-building-store" style="font-size:32px;display:block;margin-bottom:8px;color:#ccc"></i>Sin registros de Amazon en el periodo seleccionado</div>';
-    return;
-  }
-
-  const byDay = {};
-  amz.forEach(r => {
-    const day = toISO(parseDate(r['Dia de Carga']));
-    if (!day) return;
-    if (!byDay[day]) byDay[day] = {};
-    const alm = r['Almacén de Carga']||'Sin almacén';
-    if (!byDay[day][alm]) byDay[day][alm] = [];
+  if(!amz.length){el.innerHTML='<div class="empty">Sin registros de Amazon en el periodo seleccionado</div>';return;}
+  const byDay={};
+  amz.forEach(r=>{
+    const day=toISO(parseDate(r['Dia de Carga']));
+    if(!day)return;
+    if(!byDay[day])byDay[day]={};
+    const alm=r['Almacén de Carga']||'Sin almacén';
+    if(!byDay[day][alm])byDay[day][alm]=[];
     byDay[day][alm].push(r);
   });
-
-  let tbody = '';
-  Object.keys(byDay).sort().forEach(d => {
-    const dt = new Date(d+'T00:00:00');
-    const dayLabel = dt.toLocaleDateString('es-MX',{weekday:'short',day:'2-digit',month:'2-digit'});
-    Object.keys(byDay[d]).sort().forEach(alm => {
-      const rows = byDay[d][alm];
-      const almCode = ALMACENES[alm]?.code || alm;
-      const almCNs = new Set(rows.map(r=>r['CN'])).size;
-      const almP = rows.reduce((s,r)=>s+(Number(r['Piezas'])||0),0);
-      tbody += `<tr class="group-row"><td>${dayLabel}</td><td>${almCode}</td><td colspan="4" style="color:#666;font-weight:400">${almCNs} CNs · ${almP.toLocaleString()} piezas</td></tr>`;
-      rows.forEach(r => {
-        tbody += `<tr>
-          <td style="color:#ccc">↳</td>
-          <td style="color:#666;font-size:11px">${alm}</td>
-          <td>${r['CN']||'—'}</td>
-          <td>${r['Modelo']||'—'}</td>
-          <td style="text-align:right;font-weight:500">${(Number(r['Piezas'])||0).toLocaleString()}</td>
-          <td>${r['Fecha Y Hora de Cita']?fmtDateTime(parseDate(r['Fecha Y Hora de Cita'])):'—'}</td>
-        </tr>`;
-      });
+  let tbody='';
+  Object.keys(byDay).sort().forEach(d=>{
+    const dt=new Date(d+'T00:00:00');
+    const dayLabel=dt.toLocaleDateString('es-MX',{weekday:'short',day:'2-digit',month:'2-digit'});
+    Object.keys(byDay[d]).sort().forEach(alm=>{
+      const rows=byDay[d][alm];
+      const almCode=ALMACENES[alm]?.code||alm;
+      const almCNs=new Set(rows.map(r=>r['CN'])).size;
+      const almP=rows.reduce((s,r)=>s+(Number(r['Piezas'])||0),0);
+      tbody+=`<tr class="group-row"><td>${dayLabel}</td><td>${almCode}</td><td colspan="4" style="color:#666;font-weight:400">${almCNs} CNs · ${almP.toLocaleString()} piezas</td></tr>`;
+      rows.forEach(r=>{tbody+=`<tr><td style="color:#ccc">↳</td><td style="color:#666;font-size:11px">${alm}</td><td>${r['CN']||'—'}</td><td>${r['Modelo']||'—'}</td><td style="text-align:right;font-weight:500">${(Number(r['Piezas'])||0).toLocaleString()}</td><td>${r['Fecha Y Hora de Cita']?fmtDateTime(parseDate(r['Fecha Y Hora de Cita'])):'—'}</td></tr>`;});
     });
   });
-
-  const totCNs = new Set(amz.map(r=>r['CN'])).size;
-  const totP = amz.reduce((s,r)=>s+(Number(r['Piezas'])||0),0);
-
-  el.innerHTML = `
+  const totCNs=new Set(amz.map(r=>r['CN'])).size;
+  const totP=amz.reduce((s,r)=>s+(Number(r['Piezas'])||0),0);
+  el.innerHTML=`
     <div class="cards-row">
       <div class="metric-card"><div class="label">CNs Amazon</div><div class="value">${totCNs}</div></div>
       <div class="metric-card"><div class="label">Piezas</div><div class="value">${totP.toLocaleString()}</div></div>
       <div class="metric-card"><div class="label">Almacenes</div><div class="value">${new Set(amz.map(r=>r['Almacén de Carga'])).size}</div></div>
     </div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Día</th><th>Almacén</th><th>CN</th><th>Modelo</th><th style="text-align:right">Piezas</th><th>Cita</th></tr></thead>
-        <tbody>${tbody}</tbody>
-      </table>
-    </div>`;
+    <div class="table-wrap"><table>
+      <thead><tr><th>Día</th><th>Almacén</th><th>CN</th><th>Modelo</th><th style="text-align:right">Piezas</th><th>Cita</th></tr></thead>
+      <tbody>${tbody}</tbody>
+    </table></div>`;
 }
 </script>
 </body>
